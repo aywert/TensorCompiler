@@ -1,6 +1,13 @@
 #include "Node.hpp"
 
 namespace tenc {
+
+//ready decision solving the problem of printing attributes which are declared how std::variant
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+//===
+
+
 Node::Node(const onnx::NodeProto& onnx_node) {
   op_type_ = onnx_node.op_type();
 
@@ -72,6 +79,26 @@ void Node::console_dump(size_t order) const {
   }
 
   std::cout << "\n";
+
+  std::cout << "Attributes:\n";
+  for (const auto& attr: attributes_) {
+    std::cout << "name: " << attr.first << " ";
+    std::cout << "value: ";
+    std::visit(overloaded {
+      // int64_t, float, string
+      [](const int64_t& v) { std::cout << v; },
+      [](float v) { std::cout << v; },
+      [](const std::string& v) { std::cout << v; },
+      // for vectors
+      [](const auto& vec) {
+        std::cout << "[ ";
+        for (const auto& item : vec) std::cout << item << " ";
+        std::cout << "]";
+      }
+    }, attr.second);
+
+    std::cout << "\n";
+  }
 }
 
 

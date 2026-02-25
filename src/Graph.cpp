@@ -17,6 +17,5 @@ void Graph::console_dump() {
   }
 }
 
-  
 
 }

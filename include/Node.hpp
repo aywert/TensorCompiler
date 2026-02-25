@@ -1,5 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <variant>
+#include <string>
+#include "onnx.pb.h"
+#include "Tensor.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////
 //Types of attributes                                                         //
 //                                                                            //
@@ -24,18 +32,12 @@
 // broadcast    int64_t                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <variant>
-#include "onnx.pb.h"
-#include "Tensor.hpp"
+
 
 namespace tenc {
 
 
 using TensorOpType = std::string;
-
 using Attribute = std::variant<
   int64_t,                    
   float,                                   
@@ -44,6 +46,8 @@ using Attribute = std::variant<
   std::string,       
   std::vector<std::string>    
 >;
+
+using PairStrAttr = std::pair<const std::string, Attribute>;
 
 class Node {
   TensorOpType op_type_; //A string identifying the operation.
