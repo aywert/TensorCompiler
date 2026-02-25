@@ -15,7 +15,8 @@ protobuf_generate_cpp(ONNX_SRCS ONNX_HDRS ${ONNX_PROTO})
 
 # 4. Создаем ОДИН исполняемый файл
 # Включаем в него ваш main.cpp и СГЕНЕРИРОВАННЫЕ исходники
-add_executable(${PROJECT_NAME} src/main.cpp ${ONNX_SRCS})
+file(GLOB SRC_CPP "src/*.cpp")
+add_executable(${PROJECT_NAME} src/main.cpp ${ONNX_SRCS} ${SRC_CPP})
 
 # 5. Настраиваем пути и линковку
 target_include_directories(${PROJECT_NAME} PRIVATE

@@ -22,8 +22,8 @@ int main(int argc, char* argv[]) {
   //graph_builder()
   const onnx::GraphProto& graph = onnx_model.graph();
 
-  tenc::Graph my_graph;
-  graph.node();
+  tenc::Graph my_graph(graph);
   
+  my_graph.console_dump();
   return 0;
 }

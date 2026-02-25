@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include "onnx.pb.h"
 #include "Node.hpp"
 #include "Edge.hpp"
 
@@ -15,6 +16,9 @@ class Graph {
 
   public:
     Graph() {} 
+    Graph(const onnx::GraphProto& graph);
+    void console_dump(void);
 };
 
 } //tenc
+
