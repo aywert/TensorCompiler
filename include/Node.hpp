@@ -68,6 +68,15 @@ class Node {
 
     Node(const onnx::NodeProto& onnx_node, init_t& initializers);
     void console_dump(size_t order) const;
+
+    const Tensor* get_tensor_ptr(size_t index) const      { return input_[index]; }
+    void fill_tensor(const Tensor* tensor, size_t index)  { input_[index] = tensor; }
+
+    size_t get_size_of_input() const  {return node_input_.size(); }
+    size_t get_size_of_output() const {return node_output_.size();}
+
+    std::string get_name_of_input(size_t index)  const {return node_input_[index];}
+    std::string get_name_of_output(size_t index) const {return node_output_[index];}
 };
 
 } //tenc

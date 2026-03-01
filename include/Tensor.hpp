@@ -34,6 +34,7 @@ class Tensor final {
     Tensor(std::string name, DataType type, std::vector<int64_t> shape, std::vector<uint8_t> data): 
                        name_(name),   type_(type),        shape_(shape),   data_(data) {}
     Tensor() {name_ = "default_tensor"; type_ = DataType::UNDEFINED;};
+    Tensor(const std::string& name): name_(name) {}
     Tensor(const onnx::TensorProto& tensor);
     void console_dump() const;
 

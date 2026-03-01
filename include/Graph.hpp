@@ -25,7 +25,7 @@ class Graph {
   public:
     Graph() {} 
     Graph(const onnx::GraphProto& graph);
-    void link_graph();
+    void link_graph(const onnx::GraphProto& graph);
     void console_dump(void);
 };
 
