@@ -12,7 +12,13 @@ namespace tenc {
 
 class Graph {
   std::vector<Node> vertices_;
-  std::vector<Edge> edges_;
+  
+  std::vector<std::string> graph_inputs;
+  std::vector<std::string> graph_outputs;
+
+  std::map<std::string, std::unique_ptr<Tensor>> initializers_; //constant tensors of the model
+
+  //Initializers
 
   public:
     Graph() {} 

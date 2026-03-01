@@ -2,7 +2,7 @@
 
 namespace tenc {
 
-//ready decision solving the problem of printing attributes which are declared how std::variant
+//ready decision solving the problem of printing attributes which are declared as std::variant
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 //===
@@ -87,7 +87,9 @@ void Node::console_dump(size_t order) const {
     std::visit(overloaded {
       // int64_t, float, string
       [](const int64_t& v) { std::cout << v; },
+      [](const int32_t& v) { std::cout << v; },
       [](float v) { std::cout << v; },
+      [](double v) { std::cout << v; },
       [](const std::string& v) { std::cout << v; },
       // for vectors
       [](const auto& vec) {

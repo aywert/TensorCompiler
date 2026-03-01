@@ -32,10 +32,7 @@
 // broadcast    int64_t                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
 namespace tenc {
-
 
 using TensorOpType = std::string;
 using Attribute = std::variant<
@@ -54,8 +51,8 @@ class Node {
 
   std::vector<std::string> node_input_;
   std::vector<std::string> node_output_;
+  Tensor output_;
 
-  Tensor output_;  
   //Attributes
   std::unordered_map<std::string, Attribute> attributes_;// meant to have some data structure in order 
 

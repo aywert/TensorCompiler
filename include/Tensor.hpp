@@ -3,31 +3,42 @@
 #include <iostream>
 #include <vector>
 #include <any>
+#include "onnx.pb.h"
 
 namespace tenc {
 
-enum class DataType {
-  UNDEF,
+enum DataType {
+  UNDEFINED,
+  INT32,
+  INT64,
+  FLOAT,
   DOUBLE,
-  INT,
   BOOL,
   STRING
-};
+};  
 
 class Tensor final {
   std::string name_;
-  DataType type_ = DataType::UNDEF;
+  DataType type_ = DataType::UNDEFINED;
+
+  std::vector<uint8_t> data_; // raw data contains in 1 byte vector(unsigned char)
   std::vector<int64_t> shape_; // sizes of tensor
-  std::any data_;
+  std::vector<int64_t> strides_;
+
+  static DataType convert_onnx_data_type(int32_t onnx_data_type);
+  void copy_data_from_onnx(const onnx::TensorProto& tensor);
+  static size_t get_type_size(DataType type); 
+  void calculate_strides();
 
   public: 
-    Tensor(std::string name, DataType type, std::vector<int64_t> shape, std::any data): 
+    Tensor(std::string name, DataType type, std::vector<int64_t> shape, std::vector<uint8_t> data): 
                        name_(name),   type_(type),        shape_(shape),   data_(data) {}
-    Tensor() {name_ = "default_tensor"; type_ = DataType::UNDEF;};
+    Tensor() {name_ = "default_tensor"; type_ = DataType::UNDEFINED;};
+    Tensor(const onnx::TensorProto& tensor);
 
-    const std::string& name()           const { return name_;  }
-    DataType data_type()                const { return type_;  }
-    const std::vector<int64_t>& shape() const { return shape_; }
+    const std::string& get_name()           const { return name_;  }
+    DataType get_data_type()                const { return type_;  }
+    const std::vector<int64_t>& get_shape() const { return shape_; }
 };
 
 } //tenc

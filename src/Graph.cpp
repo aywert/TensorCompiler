@@ -7,6 +7,11 @@ Graph::Graph(const onnx::GraphProto& graph) {
     Node node(onnx_node);
     vertices_.push_back(node);
   }
+
+  for (const onnx::TensorProto& tensor: graph.initializer()) {
+    initializers_[tensor.name()] = std::make_unique<Tensor>(tensor);//creating object in heap
+  }
+  
 }
 
 void Graph::console_dump() {
