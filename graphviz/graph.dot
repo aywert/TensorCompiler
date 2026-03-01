@@ -1,0 +1,18 @@
+digraph ONNX_Graph {
+  rankdir=TB; 
+  node [shape=record, style=filled, fontname="Arial"];
+  node_0 [label="{ Op: Gemm | Name: my_gemm_layer}", fillcolor="#68dede"];
+  "input_tensor" -> node_0 [label="in[0]"];
+  "input_tensor" [shape=ellipse, fillcolor="#ead7b8"];
+  "weights" -> node_0 [label="in[1]"];
+  "weights" [shape=ellipse, fillcolor="#ead7b8"];
+  "bias" -> node_0 [label="in[2]"];
+  "bias" [shape=ellipse, fillcolor="#ead7b8"];
+  node_0 -> "output_tensor";
+  "output_tensor" [shape=ellipse, fillcolor="#ead7b8"];
+  node_1 [label="{ Op: Relu | Name: }", fillcolor="#68dede"];
+  "output_tensor" -> node_1 [label="in[0]"];
+  "output_tensor" [shape=ellipse, fillcolor="#ead7b8"];
+  node_1 -> "final_result";
+  "final_result" [shape=ellipse, fillcolor="#ead7b8"];
+}

@@ -9,6 +9,7 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 
 Node::Node(const onnx::NodeProto& onnx_node, init_t& initializers) {
+  name_ = onnx_node.name();
   op_type_ = onnx_node.op_type();
 
   for (const auto& input_name : onnx_node.input()) {
@@ -76,6 +77,7 @@ const Tensor* Node::search_in_initializer(const std::string& name, const init_t&
 
 void Node::console_dump(size_t order) const {
   std::cout << "Node: " << order << "\n";
+  std::cout << "Name: " << name_ << "\n";
   std::cout << "op_type: " << op_type_ << "\n";
 
   std::cout << "inputs: ";

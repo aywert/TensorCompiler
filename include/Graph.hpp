@@ -2,8 +2,10 @@
 // and the edges of E which it contains G=(V,E)
 #pragma once
 
+
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "onnx.pb.h"
 #include "Tensor.hpp"
 #include "Types.hpp"
@@ -26,6 +28,7 @@ class Graph {
     Graph() {} 
     Graph(const onnx::GraphProto& graph);
     void link_graph(const onnx::GraphProto& graph);
+    void graphviz_dump(std::string filename); 
     void console_dump(void);
 };
 
