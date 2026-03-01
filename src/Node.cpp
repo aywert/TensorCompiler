@@ -8,11 +8,13 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 //===
 
 
-Node::Node(const onnx::NodeProto& onnx_node) {
+Node::Node(const onnx::NodeProto& onnx_node, init_t& initializers) {
   op_type_ = onnx_node.op_type();
 
   for (const auto& input_name : onnx_node.input()) {
-    node_input_.push_back(input_name);
+    node_input_.push_back(input_name); // for debug and console_dump
+    //pushing to the inputs even if its nullptr to retain the order of arguments
+    input_.push_back(search_in_initializer(input_name, initializers)); 
   }
     
   for (const auto& output_name : onnx_node.output()) {
@@ -50,7 +52,7 @@ Node::Node(const onnx::NodeProto& onnx_node) {
       }
           
       case onnx::AttributeProto::FLOATS: { 
-        std::vector<int64_t> v_float;
+        std::vector<float> v_float;
         for (int i = 0; i < attr.floats_size(); ++i) {
             v_float.push_back(attr.floats(i));
         }
@@ -61,6 +63,16 @@ Node::Node(const onnx::NodeProto& onnx_node) {
     }
   } //for
 } //class Node
+
+const Tensor* Node::search_in_initializer(const std::string& name, const init_t& initializers) const {
+  auto it = initializers.find(name);
+
+  if (it != initializers.end()) {
+    return it->second.get(); 
+  }
+
+  else return nullptr;
+}
 
 void Node::console_dump(size_t order) const {
   std::cout << "Node: " << order << "\n";

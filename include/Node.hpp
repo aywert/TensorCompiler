@@ -7,6 +7,8 @@
 #include <string>
 #include "onnx.pb.h"
 #include "Tensor.hpp"
+#include "Types.hpp"
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //Types of attributes                                                         //
@@ -51,17 +53,21 @@ class Node {
 
   std::vector<std::string> node_input_;
   std::vector<std::string> node_output_;
-  Tensor output_;
+  std::vector<const Tensor*> input_;
+  std::vector<Tensor*> output_;
+  //Tensor output_;
 
   //Attributes
   std::unordered_map<std::string, Attribute> attributes_;// meant to have some data structure in order 
 
+  const Tensor* search_in_initializer(const std::string& name, const init_t& initializers) const;
+
   public:
     Node(TensorOpType op_type, std::vector<std::string> node_input, std::vector<std::string> node_output, Tensor output): 
-      op_type_(op_type), node_input_(node_input), output_(output) {}
+      op_type_(op_type), node_input_(node_input) {}
 
-    Node(const onnx::NodeProto& onnx_node);
+    Node(const onnx::NodeProto& onnx_node, init_t& initializers);
     void console_dump(size_t order) const;
 };
 
-}//tenc
+} //tenc

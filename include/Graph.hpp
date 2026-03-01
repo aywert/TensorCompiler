@@ -5,24 +5,27 @@
 #include <iostream>
 #include <vector>
 #include "onnx.pb.h"
+#include "Tensor.hpp"
+#include "Types.hpp"
 #include "Node.hpp"
-#include "Edge.hpp"
 
 namespace tenc {
 
 class Graph {
   std::vector<Node> vertices_;
-  
+
   std::vector<std::string> graph_inputs;
   std::vector<std::string> graph_outputs;
 
-  std::map<std::string, std::unique_ptr<Tensor>> initializers_; //constant tensors of the model
+  init_t initializers_; //map of constant tensors
+  blob_t tensors_; //map of tensors that are 
 
   //Initializers
 
   public:
     Graph() {} 
     Graph(const onnx::GraphProto& graph);
+    void link_graph();
     void console_dump(void);
 };
 

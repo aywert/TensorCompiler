@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
   onnx::ModelProto onnx_model; // class from generated onnx.pb.cc file     
-  std::ifstream input("./examples/conv_layer.onnx", std::ios::in | std::ios::binary); //hard code just for now
+  std::ifstream input("./examples/linear_model.onnx", std::ios::in | std::ios::binary); //hard code just for now
   if (!input) {
     std::cerr << "Couldn't open the file" << std::endl;
     return -1;

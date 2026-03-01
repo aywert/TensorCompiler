@@ -25,8 +25,8 @@ DataType Tensor::convert_onnx_data_type(int32_t onnx_data_type) {
   }
 }
 
-size_t Tensor::get_type_size(DataType type) {
-  switch (type) {
+size_t Tensor::get_type_size() const {
+  switch (type_) {
     case DataType::FLOAT:  return sizeof(float);
     case DataType::INT32:  return sizeof(int32_t);
     case DataType::INT64:  return sizeof(int64_t);
@@ -54,6 +54,19 @@ void Tensor::calculate_strides() { //usage of strides: call data_[i][j][k] -> da
     strides_[i] = current_stride;
     current_stride *= shape_[i];
   }
+}
+
+void Tensor::console_dump() const {
+  std::cout << "Tensor: " << name_ << "\n";
+  std::cout << "Size: " << get_type_size() << "\n";
+  std::cout << "Shape [ ";
+  for (const auto& num: shape_) std::cout << num << " ";
+  std::cout << "]\n";
+  std::cout << "Strides [ ";
+  for (const auto& num: strides_) std::cout << num << " ";
+  std::cout << "]\n";
+
+  std::cout << std::flush;
 }
 
 } //tenc

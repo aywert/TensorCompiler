@@ -27,7 +27,7 @@ class Tensor final {
 
   static DataType convert_onnx_data_type(int32_t onnx_data_type);
   void copy_data_from_onnx(const onnx::TensorProto& tensor);
-  static size_t get_type_size(DataType type); 
+  size_t get_type_size() const; 
   void calculate_strides();
 
   public: 
@@ -35,6 +35,7 @@ class Tensor final {
                        name_(name),   type_(type),        shape_(shape),   data_(data) {}
     Tensor() {name_ = "default_tensor"; type_ = DataType::UNDEFINED;};
     Tensor(const onnx::TensorProto& tensor);
+    void console_dump() const;
 
     const std::string& get_name()           const { return name_;  }
     DataType get_data_type()                const { return type_;  }
