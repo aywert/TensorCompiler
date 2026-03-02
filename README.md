@@ -12,7 +12,7 @@ cmake --build build
 
 Пример:
 ```
-./build/tensor ./examples/conv_layer.onnx
+./build/tensor ./examples/linear_model.onnx
 ```
 Результатом работы программы является файл ```graph.got```, который находится в папке ```grapviz```. 
 Для того, чтобы получить изображение графа запустите:
