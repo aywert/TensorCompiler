@@ -8,7 +8,7 @@ Graph::Graph(const onnx::GraphProto& graph) {
     initializers_[tensor.name()] = std::make_unique<Tensor>(tensor);//creating object in heap
   }
 
-  //creating Nodes of the graph
+  //creating Nodes of the graph using informations about initializers
   for (const onnx::NodeProto& onnx_node : graph.node()) {
     Node node(onnx_node, initializers_);
     vertices_.push_back(node);
@@ -17,7 +17,7 @@ Graph::Graph(const onnx::GraphProto& graph) {
   // creating input tensors
   for (const auto& input_proto : graph.input()) {
     if (initializers_.find(input_proto.name()) == initializers_.end()) {
-      tensors_[input_proto.name()] = std::make_unique<Tensor>(input_proto.name());
+      tensors_[input_proto.name()] = std::make_unique<Tensor>(input_proto);
     }
   }
 
@@ -28,13 +28,13 @@ void Graph::link_graph(const onnx::GraphProto& graph) {
 
   // for each node from the graph which is not a initializer create a unique_ptr and put it in the tensors_
   for (auto& node : vertices_) {
-    for (const std::string& output_name : node.str_outputs()) {
-      const auto& it = initializers_.find(output_name);
-      if (it == initializers_.end()&& tensors_.find(output_name) == tensors_.end()) {
+    for (const std::string& output_name : node.outputs_by_names()) {
+      if (initializers_.find(output_name) == initializers_.end() && 
+               tensors_.find(output_name) == tensors_.end()) {
         tensors_[output_name] = std::make_unique<Tensor>(output_name);
       } 
 
-      node.add_output(tensors_[output_name].get());
+      node.push_back_output(tensors_[output_name].get());
     } 
   }
 
@@ -75,6 +75,10 @@ void Graph::graphviz_dump(std::string filename) {
   out << "  rankdir=TB; \n";
   out << "  node [shape=record, style=filled, fontname=\"Arial\"];\n";
 
+  for (auto const& it : initializers_) out << it.second->tensor_label_for_graphviz(true);
+  for (auto const& it : tensors_)      out << it.second->tensor_label_for_graphviz(false);
+
+
   int node_idx = 0;
   for (const auto& node : vertices_) {
     std::string node_id = "node_" + std::to_string(node_idx++);
@@ -85,17 +89,19 @@ void Graph::graphviz_dump(std::string filename) {
     for (size_t i = 0; i < node.get_size_of_input(); ++i) {
       const Tensor* t = node.get_tensor_ptr(i);
       if (t != nullptr) {
-       
         out << "  \"" << t->get_name() << "\" -> " << node_id 
             << " [label=\"in[" << i << "]\"];\n";
         
-        out << "  \"" << t->get_name() << "\" [shape=ellipse, fillcolor=\"#ead7b8\"];\n";
+        //out << "  \"" << t->get_name() << "\" [shape=ellipse, fillcolor=\"#ead7b8\"];\n";
       }
     }
 
-    for (const auto& t_out : node.outputs()) {
-      out << "  " << node_id << " -> \"" << t_out->get_name() << "\";\n";
-      out << "  \"" << t_out->get_name() << "\" [shape=ellipse, fillcolor=\"#ead7b8\"];\n";
+    size_t index = 0;
+    
+    for (auto* t_out : node.outputs()) {
+      if (t_out) {
+        out << "  " << node_id << " -> \"" << t_out->get_name() << "\" [label=\"out[" << index++ << "]\"];\n";
+      }
     }
   }
 

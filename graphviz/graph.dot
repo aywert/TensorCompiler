@@ -4,11 +4,11 @@ digraph ONNX_Graph {
   "bias_1" [shape=record, style=filled, fillcolor="#ead7b8", label="{ bias_1 | float | 4 }"];
   "scale_factor" [shape=record, style=filled, fillcolor="#ead7b8", label="{ scale_factor | float | 1 }"];
   "weights_1" [shape=record, style=filled, fillcolor="#ead7b8", label="{ weights_1 | float | 4x4 }"];
-  "final_sum" [shape=record, style=filled, fillcolor="#ffffff", label="{ final_sum |  |  }"];
-  "gemm_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ gemm_out |  |  }"];
+  "final_sum" [shape=record, style=filled, fillcolor="#ffffff", label="{ final_sum | undef |  }"];
+  "gemm_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ gemm_out | undef |  }"];
   "input_x" [shape=record, style=filled, fillcolor="#ffffff", label="{ input_x | float | 1x4 }"];
-  "parallel_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ parallel_out |  |  }"];
-  "relu_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ relu_out |  |  }"];
+  "parallel_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ parallel_out | undef |  }"];
+  "relu_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ relu_out | undef |  }"];
   node_0 [label="{ Op: Gemm | Name: layer_1_gemm}", fillcolor="#68dede"];
   "input_x" -> node_0 [label="in[0]"];
   "weights_1" -> node_0 [label="in[1]"];

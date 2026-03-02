@@ -13,6 +13,18 @@ Tensor::Tensor(const onnx::TensorProto& tensor) {
   calculate_strides(); 
 }
 
+Tensor::Tensor(const onnx::ValueInfoProto& info) {
+  name_ = info.name();
+  const auto& type_proto = info.type().tensor_type();
+  type_ = convert_onnx_data_type(type_proto.elem_type());
+
+  for (int i = 0; i < type_proto.shape().dim_size(); ++i) {
+      shape_.push_back(type_proto.shape().dim(i).dim_value());
+  }
+
+  calculate_strides();
+}
+
 DataType Tensor::convert_onnx_data_type(int32_t onnx_data_type) {
   switch (onnx_data_type) {
     case onnx::TensorProto::INT32:   return DataType::INT32;
@@ -34,6 +46,26 @@ size_t Tensor::get_type_size() const {
     case DataType::BOOL:   return sizeof(bool);
     default:               return 0;
   }
+}
+
+const std::string Tensor::get_type_name() const { 
+  switch (type_) {
+    case DataType::FLOAT:  return "float";
+    case DataType::INT32:  return "int32";
+    case DataType::INT64:  return "int64";
+    case DataType::DOUBLE: return "double";
+    case DataType::BOOL:   return "bool";
+    default:               return "undef";
+  }
+}
+
+std::string Tensor::get_shape_string() const {
+  std::string result;
+  for (int64_t i = 0; i < shape_.size(); ++i) {
+    result+= std::to_string(shape_[i]);
+    if (i != shape_.size()-1) result += "x";
+  }
+  return result;
 }
 
 void Tensor::copy_data_from_onnx(const onnx::TensorProto& tensor) {
@@ -68,5 +100,16 @@ void Tensor::console_dump() const {
 
   std::cout << std::flush;
 }
+
+std::string Tensor::tensor_label_for_graphviz (bool is_init) const {
+      std::string color = is_init ? "#ead7b8" : "#ffffff"; // Веса - бежевые, данные - белые
+      std::string label = "{ " + get_name() + " | " 
+                        + get_type_name() + " | " 
+                        + get_shape_string() + " }";
+      
+      std::string result =  "  \"" + get_name() + "\" [shape=record, style=filled, fillcolor=\"" 
+          + color + "\", label=\"" + label + "\"];\n";
+      return result;
+    };
 
 } //tenc

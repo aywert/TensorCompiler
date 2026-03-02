@@ -13,13 +13,13 @@ Node::Node(const onnx::NodeProto& onnx_node, init_t& initializers) {
   op_type_ = onnx_node.op_type();
 
   for (const auto& input_name : onnx_node.input()) {
-    node_input_.push_back(input_name); // for debug and console_dump
+    input_by_names_.push_back(input_name); // for debug and console_dump
     //pushing to the inputs even if its nullptr to retain the order of arguments
     input_.push_back(search_in_initializer(input_name, initializers)); 
   }
     
   for (const auto& output_name : onnx_node.output()) {
-    node_output_.push_back(output_name);
+    output_by_names_.push_back(output_name);
   }
 
   //default constructor for Tensor output_;
@@ -81,14 +81,14 @@ void Node::console_dump(size_t order) const {
   std::cout << "op_type: " << op_type_ << "\n";
 
   std::cout << "inputs: ";
-  for (const auto& input_name : node_input_) {
+  for (const auto& input_name : input_by_names_) {
     std::cout << input_name << " ";
   }
 
   std::cout << "\n";
 
   std::cout << "outputs: ";
-  for (const auto& output_name : node_output_) {
+  for (const auto& output_name : output_by_names_) {
     std::cout << output_name << " ";
   }
 

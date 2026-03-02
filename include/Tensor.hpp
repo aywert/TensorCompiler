@@ -36,11 +36,16 @@ class Tensor final {
     Tensor() {name_ = "default_tensor"; type_ = DataType::UNDEFINED;};
     Tensor(const std::string& name): name_(name) {}
     Tensor(const onnx::TensorProto& tensor);
+    Tensor(const onnx::ValueInfoProto& info);
+
     void console_dump() const;
 
-    const std::string& get_name()           const { return name_;  }
-    DataType get_data_type()                const { return type_;  }
     const std::vector<int64_t>& get_shape() const { return shape_; }
+    const std::string& get_name()           const { return name_;  }
+    const std::string get_type_name()       const; 
+    DataType get_data_type()                const { return type_;  }
+    std::string get_shape_string()          const;
+    std::string tensor_label_for_graphviz (bool is_init) const;
 };
 
 } //tenc

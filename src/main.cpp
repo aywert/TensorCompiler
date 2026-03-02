@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
   onnx::ModelProto onnx_model; // class from generated onnx.pb.cc file     
-  std::ifstream input("./examples/linear_model.onnx", std::ios::in | std::ios::binary); //hard code just for now
+  std::ifstream input("./examples/complex_model.onnx", std::ios::in | std::ios::binary); //hard code just for now
   if (!input) {
     std::cerr << "Couldn't open the file" << std::endl;
     return -1;
@@ -20,7 +20,6 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Model succesfully downloaded!" << std::endl;
   
-  //graph_builder()
   const onnx::GraphProto& graph = onnx_model.graph();
 
   tenc::Graph my_graph(graph);

@@ -20,9 +20,7 @@ class Graph {
   std::vector<std::string> graph_outputs;
 
   init_t initializers_; //map of constant tensors
-  blob_t tensors_; //map of tensors that are 
-
-  //Initializers
+  blob_t tensors_; //map of tensors - outputs
 
   public:
     Graph() {} 
