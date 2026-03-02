@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   const onnx::GraphProto& graph = onnx_model.graph();
   tenc::Graph my_graph(graph);
   
-  //my_graph.console_dump();
+  my_graph.console_dump();
   my_graph.graphviz_dump("./graphviz/graph.dot");
 
   return 0;

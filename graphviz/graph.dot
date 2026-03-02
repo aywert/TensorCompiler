@@ -1,13 +1,28 @@
 digraph ONNX_Graph {
   rankdir=TB; 
   node [shape=record, style=filled, fontname="Arial"];
-  "W" [shape=record, style=filled, fillcolor="#ffffff", label="{ W | undef |  }"];
-  "X" [shape=record, style=filled, fillcolor="#ffffff", label="{ X | float | 1x1x5x5 }"];
-  "Y" [shape=record, style=filled, fillcolor="#ffffff", label="{ Y | undef |  }"];
-  node_0 [label="{ Op: Constant | Name: }", fillcolor="#68dede"];
-  node_0 -> "W" [label="out[0]"];
-  node_1 [label="{ Op: Conv | Name: conv_node}", fillcolor="#68dede"];
-  "X" -> node_1 [label="in[0]"];
-  "W" -> node_1 [label="in[1]"];
-  node_1 -> "Y" [label="out[0]"];
+  "bias_1" [shape=record, style=filled, fillcolor="#ead7b8", label="{ bias_1 | float | 4 }"];
+  "scale_factor" [shape=record, style=filled, fillcolor="#ead7b8", label="{ scale_factor | float | 1 }"];
+  "weights_1" [shape=record, style=filled, fillcolor="#ead7b8", label="{ weights_1 | float | 4x4 }"];
+  "final_sum" [shape=record, style=filled, fillcolor="#ffffff", label="{ final_sum | undef |  }"];
+  "gemm_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ gemm_out | undef |  }"];
+  "input_x" [shape=record, style=filled, fillcolor="#ffffff", label="{ input_x | float | 1x4 }"];
+  "parallel_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ parallel_out | undef |  }"];
+  "relu_out" [shape=record, style=filled, fillcolor="#ffffff", label="{ relu_out | undef |  }"];
+  node_0 [label="{ Op: Gemm | Name: layer_1_gemm}", fillcolor="#68dede"];
+  "input_x" -> node_0 [label="in[0]"];
+  "weights_1" -> node_0 [label="in[1]"];
+  "bias_1" -> node_0 [label="in[2]"];
+  node_0 -> "gemm_out" [label="out[0]"];
+  node_1 [label="{ Op: Relu | Name: layer_2_relu}", fillcolor="#68dede"];
+  "gemm_out" -> node_1 [label="in[0]"];
+  node_1 -> "relu_out" [label="out[0]"];
+  node_2 [label="{ Op: Mul | Name: parallel_branch}", fillcolor="#68dede"];
+  "input_x" -> node_2 [label="in[0]"];
+  "scale_factor" -> node_2 [label="in[1]"];
+  node_2 -> "parallel_out" [label="out[0]"];
+  node_3 [label="{ Op: Add | Name: merge_node}", fillcolor="#68dede"];
+  "relu_out" -> node_3 [label="in[0]"];
+  "parallel_out" -> node_3 [label="in[1]"];
+  node_3 -> "final_sum" [label="out[0]"];
 }
