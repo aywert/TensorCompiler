@@ -33,10 +33,20 @@ target_link_libraries(
 )
 
 #tenc_headers lib
-add_library(tenc_headers INTERFACE) #don't need the includes to compile but it needed for the libraries it will be included to
-target_include_directories(
-    tenc_headers INTERFACE 
-        ${CMAKE_SOURCE_DIR}/include
+
+file(GLOB TENC_SRC "src/*.cpp")  # Все .cpp файлы
+add_library(tenc_lib STATIC ${TENC_SRC})
+
+target_include_directories(tenc_lib PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+    PRIVATE
+    ${PROTO_GEN_DIR}  # Если нужно для компиляции
+)
+
+target_link_libraries(tenc_lib PUBLIC
+    onnx  # Если onnx нужен пользователям библиотеки
+    PRIVATE
+    Threads::Threads
 )
 
 file(GLOB SRC_CPP "src/*.cpp")
